@@ -21,7 +21,6 @@ public class HomeController {
     @RequestMapping("user")
     @ResponseBody
     public String user() {
-
         return JSON.toJSONString(Result.success(userDao.getById(1)));
     }
 }
