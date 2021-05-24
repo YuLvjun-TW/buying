@@ -1,5 +1,6 @@
 package com.muke.buying.service;
 
+import com.muke.buying.model.UserDetail;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -22,13 +23,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (!"admin".equals(username)) {
+        if (!"xiaoming".equals(username)) {
             throw new UsernameNotFoundException("username not found.");
         }
 
         String password = passwordEncoder.encode("123");
-//        List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList("admin");
-        List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_user");
-        return new User(username, password, authorities);
+        List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_admin");
+        return new UserDetail(username, password, authorities);
     }
 }

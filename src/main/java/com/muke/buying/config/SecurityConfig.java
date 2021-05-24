@@ -1,7 +1,5 @@
 package com.muke.buying.config;
 
-import com.muke.buying.service.MyAuthenticationFailureHandler;
-import com.muke.buying.service.MyAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,31 +15,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // 表单提交
-        http.formLogin()
-                //自定义登录页面
-                .loginPage("/login.html")
-                //设置走自定义登录逻辑，必须和表单提交的借口一样
-                .loginProcessingUrl("/login")
-//                .successForwardUrl("/home")
-                .successHandler(new MyAuthenticationSuccessHandler("/home.html"))
-//                .failureForwardUrl("/error")
-                .failureHandler(new MyAuthenticationFailureHandler("/error.html"));
-
-        // 授权
         http.authorizeRequests()
                 // 放行
-                .antMatchers("/error.html").permitAll()
-                .antMatchers("/login.html").permitAll()
-//                .antMatchers("/user").hasAnyAuthority("user", "admin")
-//                .antMatchers("/admin").hasAnyAuthority("admin", "customer")
-                // hasRole()会自动加上前缀ROLE_
-//                .antMatchers("/user").hasRole("user")
-//                .antMatchers("/admin").hasRole("admin")
+                .antMatchers("/oauth/**", "/login/**","/logout/**").permitAll()
                 // 所有请求都必须认证才能访问，必须登录
-                .anyRequest().authenticated();
-
-        // 关闭CSRF跨域
-        http.csrf().disable();
+                .anyRequest().authenticated()
+                .and()
+                .formLogin().permitAll()
+                .and()
+                .csrf().disable();
     }
 
     @Bean
