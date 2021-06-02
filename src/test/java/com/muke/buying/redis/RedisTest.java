@@ -29,7 +29,7 @@ public class RedisTest {
     @BeforeEach
     public void before() {
         RedisURI redisUri = RedisURI.builder()
-                .withHost("127.0.0.1").withPort(6379).withPassword("password")
+                .withHost("127.0.0.1").withPort(6379).withPassword("")
                 .withTimeout(Duration.of(20, ChronoUnit.SECONDS))
                 .build();
         client = RedisClient.create(redisUri);
@@ -42,49 +42,49 @@ public class RedisTest {
         client.shutdown();
     }
 
-    /**
-     * 同步操作
-     * api和jedis很类型
-     */
-    @Test
-    public void sync() {
-        RedisCommands<String, String> commands = connection.sync();
-        String result = commands.set("name", "mayun");
-        assertEquals("OK", result);
-        assertEquals("mayun", commands.get("name"));
-
-        /**
-         * ex(long timeout)设置指定的到期时间（以秒为单位）
-         * nx() 仅在不存在的情况下设置
-         * px(long timeout) 设置指定的到期时间（以毫秒为单位）
-         * xx() 仅在已存在的情况下设置
-         */
-        SetArgs args = SetArgs.Builder.nx().ex(10);
-        commands.set("name", "xiaoming", args);
-        assertEquals("mayun", commands.get("name"));
-
-        args = SetArgs.Builder.xx().ex(10);
-        commands.set("name", "xiaoming", args);
-        assertEquals("xiaoming", commands.get("name"));
-
-        args = SetArgs.Builder.xx().ex(10);
-        commands.set("age", "10", args);
-        assertEquals(null, commands.get("age"));
-    }
-
-    /**
-     * 异步操作
-     */
-    @Test
-    public void async() throws Exception {
-        RedisAsyncCommands<String, String> commands = connection.async();
-        Future<String> future = commands.set("name", "mayun");
-        assertEquals("OK", future.get());
-
-        SetArgs args = SetArgs.Builder.nx().ex(10);
-        future = commands.set("age", "30", args);
-        assertEquals("OK", future.get());
-    }
+//    /**
+//     * 同步操作
+//     * api和jedis很类型
+//     */
+//    @Test
+//    public void sync() {
+//        RedisCommands<String, String> commands = connection.sync();
+//        String result = commands.set("name", "mayun");
+//        assertEquals("OK", result);
+//        assertEquals("mayun", commands.get("name"));
+//
+//        /**
+//         * ex(long timeout)设置指定的到期时间（以秒为单位）
+//         * nx() 仅在不存在的情况下设置
+//         * px(long timeout) 设置指定的到期时间（以毫秒为单位）
+//         * xx() 仅在已存在的情况下设置
+//         */
+//        SetArgs args = SetArgs.Builder.nx().ex(10);
+//        commands.set("name", "xiaoming", args);
+//        assertEquals("mayun", commands.get("name"));
+//
+//        args = SetArgs.Builder.xx().ex(10);
+//        commands.set("name", "xiaoming", args);
+//        assertEquals("xiaoming", commands.get("name"));
+//
+//        args = SetArgs.Builder.xx().ex(10);
+//        commands.set("age", "10", args);
+//        assertEquals(null, commands.get("age"));
+//    }
+//
+//    /**
+//     * 异步操作
+//     */
+//    @Test
+//    public void async() throws Exception {
+//        RedisAsyncCommands<String, String> commands = connection.async();
+//        Future<String> future = commands.set("name", "mayun");
+//        assertEquals("OK", future.get());
+//
+//        SetArgs args = SetArgs.Builder.nx().ex(10);
+//        future = commands.set("age", "30", args);
+//        assertEquals("OK", future.get());
+//    }
 
     /**
      * 响应式API
