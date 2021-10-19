@@ -1,0 +1,10 @@
+{
+  "name": "buying",
+  "version": "1.0.0",
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "husky": "^7.0.2"
+  }
+}
